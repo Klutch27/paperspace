@@ -12,6 +12,8 @@ app.post('/home', userController.createAddress, (req, res, next)=>{
   res.status(200).json(res.locals.id);
 })
 
+app.get('/home', userController.findAddress)
+
 
 app.use((req, res, next)=>{
   res.status(404).json('Sorry, the page you are looking for does not exist.')
