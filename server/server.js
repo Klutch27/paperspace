@@ -2,8 +2,16 @@ const express = require('express');
 const app = express();
 const PORT = 3000;
 require('dotenv').config();
-
+const pool = require('../database/database');
 const userController = require('../controllers/userController');
+
+const intializeDB = async ()=>{
+  const text = 'CREATE TABLE IF NOT EXISTS address (id SERIAL PRIMARY KEY, firstname TEXT, lastname TEXT, street TEXT, city TEXT, state TEXT, country TEXT)';
+  const results = await pool.query(text);
+  console.log('Database initialized.');
+};
+
+intializeDB();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
