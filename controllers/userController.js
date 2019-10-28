@@ -37,8 +37,6 @@ userController.findAddress = async (req, res, next) => {
   // note: below conditional is pretty repetitive. Leaving it right now for the sake of time, but there's probably a way to condense this (so it's neater.)
   try {
     const { state, country } = req.body;
-    // const values = [state, country]
-    console.log('state, country: ', state, country);
   
     // if state exists, return specific data.
     if (state){
@@ -94,5 +92,30 @@ userController.updateAddress = async (req, res, next) =>{
   };
 
 };
+
+userController.deleteAddress = async (req, res, next)=>{
+  // 
+  const { id } = req.body;
+  try {
+    if (id){
+      const text = 'DELETE FROM address WHERE id=$1'
+      const values = [id];
+      const results = await pool.query(text, values);
+      if (results.rowCount){
+        return res.status(200).json('Record deleted.')
+      }
+      else {
+        return res.status(500).json('This record does not exist (it may have already been deleted).')
+      }
+    }
+    else {
+      return res.status(400).json('Please include the unique address id in your request, and try again.');
+    }
+  }
+catch(err){
+  console.error(err);
+  return res.status(500).json('There was an error trying to delete your record. Please try again.')
+}
+}
 
 module.exports = userController;
