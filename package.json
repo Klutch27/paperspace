@@ -1,0 +1,28 @@
+{
+  "name": "paperspace",
+  "version": "1.0.0",
+  "description": "paperspace take home",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server/server.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Klutch27/paperspace.git"
+  },
+  "author": "Gareth Leake",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Klutch27/paperspace/issues"
+  },
+  "homepage": "https://github.com/Klutch27/paperspace#readme",
+  "devDependencies": {
+    "eslint": "^6.6.0",
+    "nodemon": "^1.19.4"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg": "^7.12.1"
+  }
+}
