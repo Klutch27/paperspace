@@ -10,7 +10,9 @@ Once the code has been downloaded:
   - install dependencies
 - `npm start`
   - you should see the server and database initialize
+  
 ===
+
 *POST Requests*
 
 Return Value: unique id. This id is needed in order to update/delete records (note: this value is also found in the response of a GET request, so you can look it up later if needed.)
@@ -39,6 +41,7 @@ curl -d '{"firstname":"Mark", "lastname":"Twain", "street":"789 Main Street", "c
 ```
 
 ===
+
 *GET Requests*
 Return value: Array of objects containing matches for your search parameters.
 
@@ -50,7 +53,9 @@ Examples:
 
 `curl -X GET http://localhost:3000/home -d 'state=NY'`
 `curl -X GET http://localhost:3000/home -d 'country=USA'`
+
 ===
+
 *PATCH Requests*
 Return Value: The update entry
 Note: an id is required to update an entry. If you don't remember the id you wish to update, you can make a GET request and find your prior entry. The id will be listed there.
@@ -59,7 +64,9 @@ Example:
 ```
 curl -d '{"id": 3, "firstname":"Marcus", "lastname":"Twain", "street":"789 Main Street", "city":"Brooklyn", "state":"NY", "country":"USA"}' -H "Content-Type: application/json" -X PATCH http://localhost:3000/home
 ```
+
 ===
+
 *Delete Requests*
 Return value: String indicating whether the value was deleted or not.
 
