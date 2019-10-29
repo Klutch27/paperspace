@@ -68,15 +68,18 @@ userController.findAddress = async (req, res, next) => {
 };
 
 userController.updateAddress = async (req, res, next) =>{
-// any value not provided by user is set to 'null'. Ideally, need a way to account for this. Presumably they only want to update particular pieces of information.
   const { id, firstname, lastname, street, city, state, country } = req.body;
   try {
     if (id){    
       // pull data from db.
-      // compare inputted valued to stored values
+      // compare user inputted values to stored values
       // any values the user did not supply, create them from database information
       // store new updated values
+      // note: prevents NULL values from being saved in database.
       const oldData = await pool.query('SELECT * FROM address WHERE id=$1', [id]);
+      if (!oldData.rowCount){
+        return res.status(400).json('No record exists for given id. Please check your input and try again.')
+      }
 
       const userInput = {
         firstname,
@@ -91,20 +94,33 @@ userController.updateAddress = async (req, res, next) =>{
         if (!userInput[key]) userInput[key] = oldData.rows[0][key];
       }
 
-      const newValues = [id, userInput.firstname, userInput.lastname, userInput.street, userInput.city, userInput.state, userInput.country]
+      // check userInputted state and country to make sure that they're valid
+      const checkLocation = await fetch(`http://www.groupkt.com/state/get/${userInput.country}/${userInput.state}`)
+      const verified = await checkLocation.json();
 
-      const text = 'UPDATE address SET firstname=$2, lastname=$3, street=$4, city=$5, state=$6, country=$7 WHERE id=$1 RETURNING *';
-      const results = await pool.query(text, newValues);
-      if (results.rows){
-        return res.status(200).json(results.rows[0]);
+      // if userInputted state and country are valid, update their info.
+      if (verified.RestResponse.result){
+        const newValues = [id, userInput.firstname, userInput.lastname, userInput.street, userInput.city, userInput.state, userInput.country]
+  
+        const text = 'UPDATE address SET firstname=$2, lastname=$3, street=$4, city=$5, state=$6, country=$7 WHERE id=$1 RETURNING *';
+        const results = await pool.query(text, newValues);
+        if (results.rows){
+          return res.status(200).json(results.rows[0]);
+        }
+        else{
+          return res.status(400).json('Please check your data and try again.');
+        }
       }
-      else{
-        return res.status(400).json('Please check your data and try again. All fields are required for updates.');
+      // user inputted an invalid state/county combination
+      else {
+        return res.status(400).json('Sorry, unable to complete your request. Please check your state and country codes then try again. Hint: make sure to use ISO codes for both.')
       }
     }
+    // user provided an invalid id
     else {
       return res.status(400).json('Please include the unique address id in your request.');
     }
+
   }
   catch(err){
     console.error(err);
@@ -125,7 +141,7 @@ userController.deleteAddress = async (req, res, next)=>{
         return res.status(200).json('Record deleted.')
       }
       else {
-        return res.status(500).json('This record does not exist (it may have already been deleted).')
+        return res.status(500).json('No record exists for given id.')
       }
     }
     else {
