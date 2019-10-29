@@ -70,11 +70,31 @@ userController.findAddress = async (req, res, next) => {
 userController.updateAddress = async (req, res, next) =>{
 // any value not provided by user is set to 'null'. Ideally, need a way to account for this. Presumably they only want to update particular pieces of information.
   const { id, firstname, lastname, street, city, state, country } = req.body;
-  const values = [id, firstname, lastname, street, city, state, country];
   try {
     if (id){    
+      // pull data from db.
+      // compare inputted valued to stored values
+      // any values the user did not supply, create them from database information
+      // store new updated values
+      const oldData = await pool.query('SELECT * FROM address WHERE id=$1', [id]);
+
+      const userInput = {
+        firstname,
+        lastname,
+        street,
+        city,
+        state,
+        country
+      };
+
+      for (let key in userInput){
+        if (!userInput[key]) userInput[key] = oldData.rows[0][key];
+      }
+
+      const newValues = [id, userInput.firstname, userInput.lastname, userInput.street, userInput.city, userInput.state, userInput.country]
+
       const text = 'UPDATE address SET firstname=$2, lastname=$3, street=$4, city=$5, state=$6, country=$7 WHERE id=$1 RETURNING *';
-      const results = await pool.query(text, values);
+      const results = await pool.query(text, newValues);
       if (results.rows){
         return res.status(200).json(results.rows[0]);
       }
