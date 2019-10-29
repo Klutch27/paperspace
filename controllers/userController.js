@@ -13,7 +13,6 @@ userController.createAddress = async (req, res, next) => {
   try {
     const result = await fetch(`http://www.groupkt.com/state/get/${country}/${state}`)
     const values = await result.json();
-  
     if (values.RestResponse.result){
       const text = 'INSERT INTO address (firstname, lastname, street, city, state, country) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id';
       const values = [firstname, lastname, street, city, state, country];
@@ -131,18 +130,19 @@ userController.updateAddress = async (req, res, next) =>{
 };
 
 userController.deleteAddress = async (req, res, next)=>{
-  // 
   const { id } = req.body;
+
   try {
     if (id){
       const text = 'DELETE FROM address WHERE id=$1'
       const values = [id];
       const results = await pool.query(text, values);
-      if (results.rowCount){
+
+      if (results.rowCount > 0){
         return res.status(200).json('Record deleted.')
       }
       else {
-        return res.status(500).json('No record exists for given id.')
+        return res.status(400).json('No record exists for given id.')
       }
     }
     else {
