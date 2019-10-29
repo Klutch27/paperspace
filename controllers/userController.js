@@ -3,8 +3,9 @@ const fetch = require('node-fetch');
 
 const userController = {};
 
-userController.createAddress = async (req, res, next)=>{
-
+userController.createAddress = async (req, res, next) => {
+// the only required data is a state and country
+// everything else will be filled with NULL values (but these can be updated by user via PATCH request)
   const { firstname, lastname, street, city, state, country } = req.body;
 
   // check if state is valid for country. if so, then add to database.
