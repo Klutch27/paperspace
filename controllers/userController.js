@@ -43,6 +43,7 @@ userController.findAddress = async (req, res, next) => {
       const text = 'SELECT * FROM address WHERE state=$1'
       const values = [state];
       const results = await pool.query(text, values);
+      // res.locals.addressInfo = results.rows; --> better implementation for testing purposes
       return res.status(200).json(results.rows);
     }
     // no state provided, therefore use general 'country' search.
