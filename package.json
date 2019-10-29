@@ -17,6 +17,9 @@
     "url": "https://github.com/Klutch27/paperspace/issues"
   },
   "homepage": "https://github.com/Klutch27/paperspace#readme",
+  "engines": {
+    "node": "12.11.1"
+  },
   "devDependencies": {
     "chai": "^4.2.0",
     "dotenv": "^8.2.0",
