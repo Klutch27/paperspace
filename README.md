@@ -4,7 +4,7 @@
 
 ***NOTE***
 
-There is a .env file required to run this application. In order to run the application, you must add your own .env file with the credentials listed in the e-mail I sent.
+**There is a .env file required to run this application. In order to run the application, you must add your own .env file with the credentials listed in the e-mail I sent.**
 
 This application is strictly a backend Node application, with a server and database (PostgresQL). Curl commands are provided, although I personally recommend utilizing postman as it's a cleaner interface (as well as the tool I used for testing and developing). 
 
